@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		div>div{ 
+			display: inline-block;
+			padding: 5px;
+			background-color: #aaa;
+			margin: 3px;
+		}
+	</style>
+
+</head>
+<body>
+	 <div style="width:600px;border:1px solid black;"> 
+		<h2>将喜欢的内容放到里面</h2>
+		<div draggable="true" ondragstart="dsHandle(event);">11111</div>
+		<div draggable="true" ondragstart="dsHandle(event);">22222</div>
+		<div draggable="true" ondragstart="dsHandle(event);">33333</div>
+	</div>
+	<div id="dest" style="width:400px;height:400px;border:1px solid black" >
+		
+	</div>
+	<img src="a.jpg" style="width:200px;height:200px;" draggable="false" id="gb">
+	<span>   只要使用ondrop就必须要使用ondragover？？？？？？？？？？？？？？？？</span>
+	<script>
+		var dest = document.getElementById("dest");
+		var dsHandle = function(event){ 
+				event.dataTransfer.setData("text/plain",event.target.innerHTML);
+		};	
+		dest.ondragover = function(event){ 
+			return false;
+		};
+		dest.ondrop = function(event){ 			
+				var test = event.dataTransfer.getData("text/plain");
+				if(test.length > 0){ 
+					var newFile = document.createElement("div");
+					newFile.id = new Date().getUTCMilliseconds();
+					newFile.innerHTML = test;
+					newFile.draggable = "true";
+					newFile.ondragstart = function(event){ 
+						event.dataTransfer.setData("text/plain",newFile.id);
+					};
+					dest.appendChild(newFile);
+				}
+				return false;
+		};
+
+		document.getElementById("gb").ondragover = function(event){ 
+			return false;
+		};
+		 document.getElementById("gb").ondrop = function(event){
+		 	var id = event.dataTransfer.getData("text/plain");
+		 	if(id.length > 0){ 
+		 		var target = document.getElementById(id);
+		 		dest.removeChild(target);
+		 	}
+
+		 };
+
+	</script>
+</body>
+</html>
